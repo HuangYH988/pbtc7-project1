@@ -232,115 +232,93 @@ class Board extends Component {
   }
 
   play = async (col) => {
-    const { p1Win, p2Win, traps, board } = this.state;
-
-    if (!this.state.gameOver) {
-      let c = Number(col);
-
-      //Applying played tile
-      for (let r = 5; r >= 0; r--) {
-        if (!board[r][c] || board[r][c] === 3) {
-          new Audio(audio_drop).play();
-
-          //If triggered special tile
-          if (board[r][c] === 3) {
-            board[r][c] = this.state.currentPlayer;
-
-            this.triggerRandom(r, c);
-
-            //Restore display for special tiles after board cleanup
-            let t1,
-              t2,
-              t3 = false;
-            if (board[traps[0][0]][traps[0][1]] === 3) {
-              t1 = true;
-            }
-            if (board[traps[1][0]][traps[1][1]] === 3) {
-              t2 = true;
-            }
-            if (board[traps[2][0]][traps[2][1]] === 3) {
-              t3 = true;
-            }
-            for (let j = 0; j < 6 - r; j++) {
-              this.dropTiles();
-              await this.delay(200);
-            }
-
-            if (t1) {
-              board[traps[0][0]][traps[0][1]] = 3;
-            }
-            if (t2) {
-              board[traps[1][0]][traps[1][1]] = 3;
-            }
-            if (t3) {
-              board[traps[2][0]][traps[2][1]] = 3;
-            }
-            this.setState({ board });
-          } else {
-            board[r][c] = this.state.currentPlayer;
-          }
-
-          //Check for potential winner
-          let result = checkAll(board, c4rows, c4columns);
-          if (result === this.state.player1) {
-            new Audio(audio_win).play();
-            this.setState({
-              board,
-              gameOver: true,
-              p1Win: p1Win + 1,
-              Winner: this.state.currentPlayer,
-            });
-            this.toggleNotification("win", this.state.currentPlayer);
-          } else if (result === this.state.player2) {
-            new Audio(audio_win).play();
-            this.setState({
-              board,
-              gameOver: true,
-              p2Win: p2Win + 1,
-              Winner: this.state.currentPlayer,
-            });
-            this.toggleNotification("win", this.state.currentPlayer);
-          } else if (result === "draw") {
-            new Audio(audio_draw).play();
-            this.setState({
-              board,
-              gameOver: true,
-              Winner: 3,
-            });
-            this.toggleNotification("draw", this.state.currentPlayer);
-          } else {
-            this.setState({ board, currentPlayer: this.togglePlayer() });
-            let c_name, space;
-            const value = this.state.currentPlayer;
-            if (value === 1) {
-              space = "player1";
-            } else if (value === 2) {
-              space = "player2";
-            } else if (value === 5) {
-              space = "playerGreen";
-            } else if (value === 6) {
-              space = "playerGrey";
-            } else if (value === 7) {
-              space = "playerPurple";
-            } else if (value === 8) {
-              space = "playerBrown";
-            }
-            if (this.state.currentPlayer === this.state.player1) {
-              c_name = [space, "circle"].join(" ");
-            } else if (this.state.currentPlayer === this.state.player2) {
-              c_name = [space, "circle"].join(" ");
-            }
-
-            document.getElementById("selector" + c.toString()).className =
-              c_name.toString();
-          }
-          break;
-        }
-      }
-    } else {
+    const { p1Win, p2Win, traps, board, currentPlayer, player1, player2 } = this.state;
+    if (this.state.gameOver) {
       alert("Game over. Please start a new game.");
+      return;
     }
-  };
+    let c = Number(col);
+  
+    // Applying played tile
+    for (let r = 5; r >= 0; r--) {
+      if (!board[r][c] || board[r][c] === 3) {
+        new Audio(audio_drop).play();
+  
+        //If triggered special tile
+        if (board[r][c] === 3) {
+          board[r][c] = currentPlayer;
+          this.triggerRandom(r, c);
+  
+          // Restore display for special tiles after board cleanup
+          let t1 = board[traps[0][0]][traps[0][1]] === 3;
+          let t2 = board[traps[1][0]][traps[1][1]] === 3;
+          let t3 = board[traps[2][0]][traps[2][1]] === 3;
+          for (let j = 0; j < 6 - r; j++) {
+            this.dropTiles();
+            await this.delay(200);
+          }
+          if (t1) board[traps[0][0]][traps[0][1]] = 3;
+          if (t2) board[traps[1][0]][traps[1][1]] = 3;
+          if (t3) board[traps[2][0]][traps[2][1]] = 3;
+  
+          this.setState({ board });
+        } else {
+          board[r][c] = currentPlayer;
+        }
+  
+        // Check for potential winner
+        let result = checkAll(board, c4rows, c4columns);
+        let Winner;
+        let audio;
+        let p1Score = p1Win;
+        let p2Score = p2Win;
+  
+        if (result === player1) {
+          Winner = currentPlayer;
+          audio = audio_win;
+          p1Score++;
+        } else if (result === player2) {
+          Winner = currentPlayer;
+          audio = audio_win;
+          p2Score++;
+        } else if (result === "draw") {
+          Winner = 3;
+          audio = audio_draw;
+        } else {
+          Winner = null;
+        }
+  
+        if (Winner !== null) {
+          new Audio(audio).play();
+          this.setState({ 
+            board, 
+            gameOver: true, 
+            p1Win: p1Score, 
+            p2Win: p2Score,
+            Winner: currentPlayer 
+          });
+          this.toggleNotification("win", currentPlayer);
+        } else {
+          this.setState({ board, currentPlayer: this.togglePlayer() });
+          let c_name, space;
+          const value = currentPlayer;
+          if (value === 1) space = "player1";
+          else if (value === 2) space = "player2";
+          else if (value === 5) space = "playerGreen";
+          else if (value === 6) space = "playerGrey";
+          else if (value === 7) space = "playerPurple";
+          else if (value === 8) space = "playerBrown";
+  
+          if (currentPlayer === player1) {
+            c_name = [space, "circle"].join(" ");
+          } else {
+            c_name = [space, "circle"].join(" ");
+          }
+  
+          document.getElementById("selector" + c.toString()).className = c_name.toString();
+        }
+        break;
+      }}}
 
   //Display tile at selector row and play position on mouse over
   hoverDisplay(board, c, curr) {
