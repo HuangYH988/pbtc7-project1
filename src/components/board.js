@@ -320,44 +320,35 @@ class Board extends Component {
         break;
       }}}
 
-  //Display tile at selector row and play position on mouse over
   hoverDisplay(board, c, curr) {
-    let audio = new Audio(audio_click);
-    audio.volume = 0.1;
-    let space;
-    if (curr === 1) {
-      space = "player1";
-    } else if (curr === 2) {
-      space = "player2";
-    } else if (curr === 5) {
-      space = "playerGreen";
-    } else if (curr === 6) {
-      space = "playerGrey";
-    } else if (curr === 7) {
-      space = "playerPurple";
-    } else if (curr === 8) {
-      space = "playerBrown";
-    }
-    let c_name = "";
-    if (curr === this.state.player1) {
-      c_name = [space, "circle"].join(" ");
-    } else if (curr === this.state.player2) {
-      c_name = [space, "circle"].join(" ");
-    }
+  const audio = new Audio(audio_click);
+  audio.volume = 0.1;
+  
+  let space = "";
+  if (curr === 1) space = "player1";
+  else if (curr === 2) space = "player2";
+  else if (curr === 5) space = "playerGreen";
+  else if (curr === 6) space = "playerGrey";
+  else if (curr === 7) space = "playerPurple";
+  else if (curr === 8) space = "playerBrown";
 
-    document.getElementById("selector" + c.toString()).className =
-      c_name.toString();
+  let c_name = "";
+  if (curr === this.state.player1 || curr === this.state.player2) {
+    c_name = [space, "circle"].join(" ");
+  }
 
-    for (let r = c4rows - 1; r >= 0; r--) {
-      if (!board[r][c] || board[r][c] === 3) {
-        audio.play();
-        document.getElementById(r.toString() + c.toString()).className =
-          "tile-hover";
+  const selector = document.getElementById("selector" + c.toString());
+  selector.className = c_name.toString();
 
-        break;
-      }
+  for (let r = c4rows - 1; r >= 0; r--) {
+    if (!board[r][c] || board[r][c] === 3) {
+      audio.play();
+      const tile = document.getElementById(r.toString() + c.toString());
+      tile.className = "tile-hover";
+      break;
     }
   }
+}
 
   //Restore board look on mouse out
   hoverOut(c) {
