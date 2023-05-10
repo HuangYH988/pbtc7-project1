@@ -1,41 +1,49 @@
-function check3_DiagonalRight(board, rows, columns, p1, p2) {
-  const score = [0, 0];
-
-  for (let r = rows - 1; r >= 3; r--) {
-    for (let c = 0; c < columns - 3; c++) {
-      const curr = board[r][c];
-
-      if (curr !== p1 && curr !== p2) {
-        continue;
-      }
-
-      const left = board[r - 1][c + 1];
-      const left2 = board[r - 2][c + 2];
-      const left3 = board[r - 3][c + 3];
-      const bottomLeft = board[r + 1][c - 1];
-      const topRight = board[r - 3][c + 3];
-
-      if ((r === 4 || r === 3) && c !== 0 && curr === left && curr === left2) {
+function check3_DiagonalRight(board, c4rows, c4columns, p1, p2) {
+  let score = [0, 0];
+  for (let r = c4rows - 1; r >= 3; r--) {
+    for (let c = 0; c < c4columns - 3; c++) {
+      if (board[r][c] === p1 || board[r][c] === p2) {
         if (
-          (bottomLeft === null || bottomLeft === 3) &&
-          (topRight === null || topRight === 3)
+          (r === 4 || r === 3) &&
+          c !== 0 &&
+          board[r][c] === board[r - 1][c + 1] &&
+          board[r][c] === board[r - 2][c + 2]
         ) {
-          score[curr === p1 ? 0 : 1]++;
+          if (board[r + 1][c - 1] === null || board[r + 1][c - 1] === 3) {
+            if (board[r][c] === p1) {
+              score[0]++;
+            } else {
+              score[1]++;
+            }
+          }
+          if (board[r - 3][c + 3] === null || board[r - 3][c + 3] === 3) {
+            if (board[r][c] === p1) {
+              score[0]++;
+            } else {
+              score[1]++;
+            }
+          }
+        } else if (
+          (board[r][c] === board[r - 1][c + 1]) +
+            (board[r][c] === board[r - 2][c + 2]) +
+            (board[r][c] === board[r - 3][c + 3]) ===
+            2 &&
+          (board[r - 1][c + 1] === null ||
+            board[r - 2][c + 2] === null ||
+            board[r - 3][c + 3] === null ||
+            board[r - 1][c + 1] === 3 ||
+            board[r - 2][c + 2] === 3 ||
+            board[r - 3][c + 3] === 3)
+        ) {
+          if (board[r][c] === p1) {
+            score[0]++;
+          } else {
+            score[1]++;
+          }
         }
-      } else if (
-        (curr === left) + (curr === left2) + (curr === left3) === 2 &&
-        (left === null ||
-          left2 === null ||
-          left3 === null ||
-          left === 3 ||
-          left2 === 3 ||
-          left3 === 3)
-      ) {
-        score[curr === p1 ? 0 : 1]++;
       }
     }
   }
-
   return score;
 }
 
