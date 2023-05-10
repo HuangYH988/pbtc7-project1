@@ -50,7 +50,6 @@ class Board extends Component {
     this.hoverOut = this.hoverOut.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
     //this.displayBtn = this.displayBtn.bind(this);
-  
   }
 
   togglePlayer() {
@@ -82,7 +81,7 @@ class Board extends Component {
     document.getElementById("p1Colors").style.display = "block";
     document.getElementById("p2Colors").style.display = "block";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="1px  solid black";
+    document.getElementById("colorBody").style.border = "1px  solid black";
     document.getElementById("colorTitle").style.width = titleWidth + "px";
   }
   hideColor() {
@@ -92,7 +91,7 @@ class Board extends Component {
     document.getElementById("colorTitle").style.width = titleWidth + "px";
     document.getElementById("cHeading").style.display = "none";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="0px";
+    document.getElementById("colorBody").style.border = "0px";
     document.getElementById("p1Colors").style.display = "none";
     document.getElementById("p2Colors").style.display = "none";
   }
@@ -391,7 +390,6 @@ class Board extends Component {
       document.getElementById(name).className = "tile";
     }
   }
-  
 
   componentWillMount() {
     this.initBoard();
@@ -603,9 +601,9 @@ class Board extends Component {
         <span className="text">
           {gameOver ? gameWinnerMessage : gameTurnMessage}
         </span>
-    
+
         <PopupIcon onClick={this.togglePopup} />
-    
+
         {this.state.showPopup && (
           <Popup
             onClose={this.togglePopup}
@@ -630,7 +628,7 @@ class Board extends Component {
             OpensDiagonals={check3_Diagonals}
           />
         )}
-    
+
         <table id="selector-table">
           <thead></thead>
           <tbody>
@@ -648,7 +646,7 @@ class Board extends Component {
             ))}
           </tbody>
         </table>
-    
+
         <table>
           <thead></thead>
           <tbody>
@@ -666,7 +664,7 @@ class Board extends Component {
             ))}
           </tbody>
         </table>
-    
+
         {showNotification && (
           <NotifyContent
             notificationID={notificationID}
@@ -674,10 +672,10 @@ class Board extends Component {
             p1={player1}
           />
         )}
-    
+
         <br />
         <br />
-    
+
         <div className="button-row">
           <div
             className="button"
@@ -687,17 +685,17 @@ class Board extends Component {
           >
             New Game
           </div>
-    
+
           <div className="button" onClick={this.handleMusicToggle}>
             {this.state.isMusicPlaying ? "Pause Music" : "Play Music"}
           </div>
         </div>
-    
+
         <div className="color-container">
           <button className="btn-color" id="btnColor" onClick={this.displayBtn}>
             C
           </button>
-    
+
           <div className="color-title" id="colorTitle">
             <h2 id="cHeading">Change Tile Color</h2>
             <div className="color-body" id="colorBody">
@@ -776,6 +774,5 @@ class Board extends Component {
     );
   }
 }
-
 
 export default Board;
