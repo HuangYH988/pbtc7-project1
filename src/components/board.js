@@ -39,7 +39,7 @@ class Board extends Component {
       gameOver: false,
       traps: [[], [], []],
       showPopup: false,
-      showColor: false,
+      showColor: true,
       isMusicPlaying: true,
       showNotification: false,
       notificationID: "",
@@ -49,7 +49,7 @@ class Board extends Component {
     this.hoverDisplay = this.hoverDisplay.bind(this);
     this.hoverOut = this.hoverOut.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
-    this.displayBtn = this.displayBtn.bind(this);
+    //this.displayBtn = this.displayBtn.bind(this);
   
   }
 
@@ -64,16 +64,15 @@ class Board extends Component {
       showPopup: !this.state.showPopup,
     });
   }
-  displayBtn() {
-    this.setState({
-      showColor: !this.state.showColor,
-    });
-    if (this.state.showColor) {
+  displayBtn = () => {
+    const { showColor } = this.state;
+    this.setState({ showColor: !showColor });
+    if (showColor) {
       this.displayColor();
     } else {
       this.hideColor();
     }
-  }
+  };
 
   displayColor() {
     let titleWidth = 470;
@@ -604,8 +603,9 @@ class Board extends Component {
         <span className="text">
           {gameOver ? gameWinnerMessage : gameTurnMessage}
         </span>
-
+    
         <PopupIcon onClick={this.togglePopup} />
+    
         {this.state.showPopup && (
           <Popup
             onClose={this.togglePopup}
@@ -630,7 +630,7 @@ class Board extends Component {
             OpensDiagonals={check3_Diagonals}
           />
         )}
-
+    
         <table id="selector-table">
           <thead></thead>
           <tbody>
@@ -648,7 +648,7 @@ class Board extends Component {
             ))}
           </tbody>
         </table>
-
+    
         <table>
           <thead></thead>
           <tbody>
@@ -666,6 +666,7 @@ class Board extends Component {
             ))}
           </tbody>
         </table>
+    
         {showNotification && (
           <NotifyContent
             notificationID={notificationID}
@@ -673,10 +674,10 @@ class Board extends Component {
             p1={player1}
           />
         )}
-
+    
         <br />
         <br />
-
+    
         <div className="button-row">
           <div
             className="button"
@@ -686,16 +687,17 @@ class Board extends Component {
           >
             New Game
           </div>
-
+    
           <div className="button" onClick={this.handleMusicToggle}>
             {this.state.isMusicPlaying ? "Pause Music" : "Play Music"}
           </div>
         </div>
+    
         <div className="color-container">
           <button className="btn-color" id="btnColor" onClick={this.displayBtn}>
             C
           </button>
-
+    
           <div className="color-title" id="colorTitle">
             <h2 id="cHeading">Change Tile Color</h2>
             <div className="color-body" id="colorBody">
@@ -711,7 +713,6 @@ class Board extends Component {
                   onClick={() => this.changeP1Color(2)}
                   id="Yellow1"
                 />
-                
                 <button
                   className="colored-btn"
                   onClick={() => this.changeP1Color(5)}
@@ -775,5 +776,6 @@ class Board extends Component {
     );
   }
 }
+
 
 export default Board;
