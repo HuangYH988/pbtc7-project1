@@ -39,7 +39,7 @@ class Board extends Component {
       gameOver: false,
       traps: [[], [], []],
       showPopup: false,
-      showColor: false,
+      showColor: true,
       isMusicPlaying: true,
       showNotification: false,
       notificationID: "",
@@ -49,8 +49,7 @@ class Board extends Component {
     this.hoverDisplay = this.hoverDisplay.bind(this);
     this.hoverOut = this.hoverOut.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
-    this.displayBtn = this.displayBtn.bind(this);
-  
+    //this.displayBtn = this.displayBtn.bind(this);
   }
 
   togglePlayer() {
@@ -64,16 +63,15 @@ class Board extends Component {
       showPopup: !this.state.showPopup,
     });
   }
-  displayBtn() {
-    this.setState({
-      showColor: !this.state.showColor,
-    });
-    if (this.state.showColor) {
+  displayBtn = () => {
+    const { showColor } = this.state;
+    this.setState({ showColor: !showColor });
+    if (showColor) {
       this.displayColor();
     } else {
       this.hideColor();
     }
-  }
+  };
 
   displayColor() {
     let titleWidth = 470;
@@ -83,7 +81,7 @@ class Board extends Component {
     document.getElementById("p1Colors").style.display = "block";
     document.getElementById("p2Colors").style.display = "block";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="1px  solid black";
+    document.getElementById("colorBody").style.border = "1px  solid black";
     document.getElementById("colorTitle").style.width = titleWidth + "px";
   }
   hideColor() {
@@ -93,7 +91,7 @@ class Board extends Component {
     document.getElementById("colorTitle").style.width = titleWidth + "px";
     document.getElementById("cHeading").style.display = "none";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="0px";
+    document.getElementById("colorBody").style.border = "0px";
     document.getElementById("p1Colors").style.display = "none";
     document.getElementById("p2Colors").style.display = "none";
   }
@@ -361,7 +359,6 @@ class Board extends Component {
       document.getElementById(name).className = "tile";
     }
   }
-  
 
   componentWillMount() {
     this.initBoard();
@@ -575,6 +572,7 @@ class Board extends Component {
         </span>
 
         <PopupIcon onClick={this.togglePopup} />
+
         {this.state.showPopup && (
           <Popup
             onClose={this.togglePopup}
@@ -635,6 +633,7 @@ class Board extends Component {
             ))}
           </tbody>
         </table>
+
         {showNotification && (
           <NotifyContent
             notificationID={notificationID}
@@ -660,6 +659,7 @@ class Board extends Component {
             {this.state.isMusicPlaying ? "Pause Music" : "Play Music"}
           </div>
         </div>
+
         <div className="color-container">
           <button className="btn-color" id="btnColor" onClick={this.displayBtn}>
             C
@@ -680,7 +680,6 @@ class Board extends Component {
                   onClick={() => this.changeP1Color(2)}
                   id="Yellow1"
                 />
-                
                 <button
                   className="colored-btn"
                   onClick={() => this.changeP1Color(5)}
