@@ -49,8 +49,6 @@ class Board extends Component {
     this.hoverDisplay = this.hoverDisplay.bind(this);
     this.hoverOut = this.hoverOut.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
-    this.displayBtn = this.displayBtn.bind(this);
-  
   }
 
   togglePlayer() {
@@ -64,16 +62,17 @@ class Board extends Component {
       showPopup: !this.state.showPopup,
     });
   }
-  displayBtn() {
-    this.setState({
-      showColor: !this.state.showColor,
-    });
-    if (this.state.showColor) {
+  displayBtn = () => {
+    const { showColor } = this.state;
+
+    this.setState({ showColor: !showColor });
+
+    if (showColor) {
       this.displayColor();
     } else {
       this.hideColor();
     }
-  }
+  };
 
   displayColor() {
     let titleWidth = 470;
@@ -83,7 +82,7 @@ class Board extends Component {
     document.getElementById("p1Colors").style.display = "block";
     document.getElementById("p2Colors").style.display = "block";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="1px  solid black";
+    document.getElementById("colorBody").style.border = "1px  solid black";
     document.getElementById("colorTitle").style.width = titleWidth + "px";
   }
   hideColor() {
@@ -93,7 +92,7 @@ class Board extends Component {
     document.getElementById("colorTitle").style.width = titleWidth + "px";
     document.getElementById("cHeading").style.display = "none";
     document.getElementById("colorBody").style.height = bodyHeight + "px";
-    document.getElementById("colorBody").style.border="0px";
+    document.getElementById("colorBody").style.border = "0px";
     document.getElementById("p1Colors").style.display = "none";
     document.getElementById("p2Colors").style.display = "none";
   }
@@ -232,23 +231,24 @@ class Board extends Component {
   }
 
   play = async (col) => {
-    const { p1Win, p2Win, traps, board, currentPlayer, player1, player2 } = this.state;
+    const { p1Win, p2Win, traps, board, currentPlayer, player1, player2 } =
+      this.state;
     if (this.state.gameOver) {
       alert("Game over. Please start a new game.");
       return;
     }
     let c = Number(col);
-  
+
     // Applying played tile
     for (let r = 5; r >= 0; r--) {
       if (!board[r][c] || board[r][c] === 3) {
         new Audio(audio_drop).play();
-  
+
         //If triggered special tile
         if (board[r][c] === 3) {
           board[r][c] = currentPlayer;
           this.triggerRandom(r, c);
-  
+
           // Restore display for special tiles after board cleanup
           let t1 = board[traps[0][0]][traps[0][1]] === 3;
           let t2 = board[traps[1][0]][traps[1][1]] === 3;
@@ -260,19 +260,19 @@ class Board extends Component {
           if (t1) board[traps[0][0]][traps[0][1]] = 3;
           if (t2) board[traps[1][0]][traps[1][1]] = 3;
           if (t3) board[traps[2][0]][traps[2][1]] = 3;
-  
+
           this.setState({ board });
         } else {
           board[r][c] = currentPlayer;
         }
-  
+
         // Check for potential winner
         let result = checkAll(board, c4rows, c4columns);
         let Winner;
         let audio;
         let p1Score = p1Win;
         let p2Score = p2Win;
-  
+
         if (result === player1) {
           Winner = currentPlayer;
           audio = audio_win;
@@ -287,15 +287,15 @@ class Board extends Component {
         } else {
           Winner = null;
         }
-  
+
         if (Winner !== null) {
           new Audio(audio).play();
-          this.setState({ 
-            board, 
-            gameOver: true, 
-            p1Win: p1Score, 
+          this.setState({
+            board,
+            gameOver: true,
+            p1Win: p1Score,
             p2Win: p2Score,
-            Winner: currentPlayer 
+            Winner: currentPlayer,
           });
           this.toggleNotification("win", currentPlayer);
         } else {
@@ -308,47 +308,50 @@ class Board extends Component {
           else if (value === 6) space = "playerGrey";
           else if (value === 7) space = "playerPurple";
           else if (value === 8) space = "playerBrown";
-  
+
           if (currentPlayer === player1) {
             c_name = [space, "circle"].join(" ");
           } else {
             c_name = [space, "circle"].join(" ");
           }
-  
-          document.getElementById("selector" + c.toString()).className = c_name.toString();
+
+          document.getElementById("selector" + c.toString()).className =
+            c_name.toString();
         }
         break;
-      }}}
+      }
+    }
+  };
 
   hoverDisplay(board, c, curr) {
-  const audio = new Audio(audio_click);
-  audio.volume = 0.1;
-  
-  let space = "";
-  if (curr === 1) space = "player1";
-  else if (curr === 2) space = "player2";
-  else if (curr === 5) space = "playerGreen";
-  else if (curr === 6) space = "playerGrey";
-  else if (curr === 7) space = "playerPurple";
-  else if (curr === 8) space = "playerBrown";
+    const audio = new Audio(audio_click);
+    audio.volume = 0.1;
 
-  let c_name = "";
-  if (curr === this.state.player1 || curr === this.state.player2) {
-    c_name = [space, "circle"].join(" ");
-  }
+    let space = "";
+    if (curr === 1) space = "player1";
+    else if (curr === 2) space = "player2";
+    else if (curr === 5) space = "playerGreen";
+    else if (curr === 6) space = "playerGrey";
+    else if (curr === 7) space = "playerPurple";
+    else if (curr === 8) space = "playerBrown";
 
-  const selector = document.getElementById("selector" + c.toString());
-  selector.className = c_name.toString();
+    let c_name = "";
+    if (curr === this.state.player1 || curr === this.state.player2) {
+      c_name = [space, "circle"].join(" ");
+    }
 
-  for (let r = c4rows - 1; r >= 0; r--) {
-    if (!board[r][c] || board[r][c] === 3) {
-      audio.play();
-      const tile = document.getElementById(r.toString() + c.toString());
-      tile.className = "tile-hover";
-      break;
+    const selector = document.getElementById("selector" + c.toString());
+    selector.className = c_name.toString();
+
+    for (let r = c4rows - 1; r >= 0; r--) {
+      if (!board[r][c] || board[r][c] === 3) {
+        audio.play();
+        const tile = document.getElementById(r.toString() + c.toString());
+        tile.className = "tile-hover";
+        break;
+      }
     }
   }
-}
 
   //Restore board look on mouse out
   hoverOut(c) {
@@ -361,7 +364,6 @@ class Board extends Component {
       document.getElementById(name).className = "tile";
     }
   }
-  
 
   componentWillMount() {
     this.initBoard();
@@ -680,7 +682,7 @@ class Board extends Component {
                   onClick={() => this.changeP1Color(2)}
                   id="Yellow1"
                 />
-                
+
                 <button
                   className="colored-btn"
                   onClick={() => this.changeP1Color(5)}

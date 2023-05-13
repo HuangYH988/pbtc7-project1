@@ -41,7 +41,7 @@ class Tile extends Component {
 
     if (selectorType) {
       divProps.className = "selector-tile";
-      divProps.id = `selector${columnIndex}`;
+      circleProps.id = `selector${columnIndex}`;
     } else {
       divProps.id = `${rowIndex}${columnIndex}`;
     }
